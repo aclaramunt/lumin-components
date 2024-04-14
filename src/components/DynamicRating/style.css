@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@700&display=swap');
+
+:root {
+  --main-font-family: "Public Sans", sans-serif;
+
+  --color-text: #323741;
+
+  --average-size: 246px;
+  --average-stroke-width: 2;
+  --average-progress-color: #2eb5b2;
+  --average-sore-height: 47px;
+
+  --benchmark-size: 212px;
+  --benchmark-stroke-width: 1.25;
+  --benchmark-progress-color: #ef426f;
+  --benchmark-sore-height: 20px;
+
+  --bg-progress-color: #e2eff0;
+
+  --variant-blue: #009AC3;
+  --variant-green: #2EB5B2;
+  --variant-lilac: #B289BE;
+  --variant-pink: #D4007F;
+  --variant-yellow: #F59A00;
+}
+  
+.dynamic-rating {
+  font-family: var(--main-font-family);
+  position: relative;
+  display: flex;
+  height: var(--average-size);
+  width: var(--average-size);
+  align-items: center;
+  justify-content: center;
+}
+  /*
+  DARK MODE
+  */
+  .dark-theme {
+    --color-text: #ffffff;
+    --bg-progress-color: #232C35;
+    --benchmark-progress-color: #ED6A5E;
+  }
+
+  /*
+  VARIANTS
+  */
+  .dynamic-rating--blue {
+    --average-progress-color: var(--variant-blue);
+  }
+  .dynamic-rating--green {
+    --average-progress-color: var(--variant-green);
+  }
+  .dynamic-rating--lilac {
+    --average-progress-color: var(--variant-lilac);
+  }
+  .dynamic-rating--pink {
+    --average-progress-color: var(--variant-pink);
+  }
+  .dynamic-rating--yellow {
+    --average-progress-color: var(--variant-yellow);
+  }
+
+  /*
+  AVERAGE GRAPH
+  */
+  .dynamic-rating__average-rating {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 50%;
+    right: 50%;
+    transform: rotate(-90deg) translate(50%, 50%);
+    z-index: 1;
+  }
+    .dynamic-rating__average-rating-background {
+      fill: none;
+      stroke: var(--bg-progress-color);
+      stroke-width: var(--average-stroke-width);
+    }
+    .dynamic-rating__average-rating-progress {
+      fill: none;
+      stroke: var(--average-progress-color);
+      stroke-dasharray: 100 100;
+      stroke-dashoffset: 100;
+      stroke-linecap: round;
+      stroke-width: var(--average-stroke-width);
+      transition: stroke-dashoffset 1s ease-in-out, stroke .3s;
+    }
+    .dynamic-rating__average-score-container {
+      display: flex;
+      gap: 2px;
+    }
+    .dynamic-rating__average-total {
+      height: var(--average-sore-height);
+    }
+    .dynamic-rating__average-counter {
+      overflow: hidden;
+      height: var(--average-sore-height);
+    }
+      .dynamic-rating__average-counter-wrapper {
+        display: flex;
+        flex-direction: column;
+        animation: slideAverage 2s forwards .5s;
+      }
+      .dynamic-rating__average-counter-number {
+        flex-grow: 1;
+        flex-shrink: 0;
+        min-width: 100%;
+        text-align: right;
+      }
+  
+  /*
+  AVERAGE INFO
+  */
+  .dynamic-rating__info {
+    position: relative;
+    z-index: 10;
+  }
+  .dynamic-rating__average-title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    margin: 0;
+    padding: 0;
+    color: var(--color-text);
+  }
+  .dynamic-rating__average-score {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 8px;
+    color: var(--color-text);
+  }
+  .dynamic-rating__average-arrows {
+    width: 12px;
+  }
+  
+  /*
+  BENCHMARK GRAPH
+  */
+  .dynamic-rating__benchmark-rating {
+    position: absolute;
+    height: var(--benchmark-size);
+    width: var(--benchmark-size);
+    top: 50%;
+    right: 50%;
+    transform: rotate(-90deg) translate(50%, 50%);
+    z-index: 1;
+  }
+    .dynamic-rating__benchmark-rating-background {
+      fill: none;
+      stroke: transparent;
+      stroke-width: var(--benchmark-stroke-width);
+    }
+    .dynamic-rating__benchmark-rating-progress {
+      fill: none;
+      stroke: var(--benchmark-progress-color);
+      stroke-dasharray: 100 100;
+      stroke-dashoffset: 100;
+      stroke-linecap: round;
+      stroke-width: var(--benchmark-stroke-width);
+      transition: stroke-dashoffset 1s ease-in-out;
+    }
+    .dynamic-rating__benchmark-score-container {
+      display: flex;
+      gap: 4px;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+      .dynamic-rating__benchmark-score-container-counter {
+        display: flex;
+        gap: 1px;
+        font-weight: 700;
+      }
+    .dynamic-rating__benchmark-total {
+      height: var(--benchmark-sore-height);
+    }
+    .dynamic-rating__benchmark-counter {
+      overflow: hidden;
+      height: var(--benchmark-sore-height);
+    }
+      .dynamic-rating__benchmark-counter-wrapper {
+        display: flex;
+        flex-direction: column;
+        animation: slideBenchmark 2s forwards .5s;
+      }
+      .dynamic-rating__benchmark-counter-number {
+        flex-grow: 1;
+        flex-shrink: 0;
+        min-width: 100%;
+        text-align: right;
+      }
+
+  /*
+  BENCHMARK INFO
+  */
+  .dynamic-rating__benchmark-score {
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  /*
+  ANIMATIONS
+  */
+  @keyframes slideAverage {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% + var(--average-sore-height) + 1px));
+    }
+  }
+  @keyframes slideBenchmark {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% + var(--benchmark-sore-height) - 1px));
+    }
+  }
