@@ -1,19 +1,13 @@
 # lumin-components
 
 ## Project setup
+
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Check the components in Storybook
 
-### Compiles and minifies for production
 ```
-npm run build
+npm run storybook
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

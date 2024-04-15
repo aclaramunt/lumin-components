@@ -3,16 +3,36 @@
     <section class="dynamic-rating__info">
       <h3 class="dynamic-rating__average-title">Average Score</h3>
       <section class="dynamic-rating__average-score">
-        <img
-          v-if="benchmarkScore > averageScore"
-          class="dynamic-rating__average-arrows"
-          src="./assets/arrows-down.svg"
-        />
-        <img
-          v-else
-          class="dynamic-rating__average-arrows"
-          src="./assets/arrows-up.svg"
-        />
+        <div class="dynamic-rating__average-arrows">
+          <img
+            :style="{
+              transform:
+                benchmarkScore && averageScore && benchmarkScore > averageScore
+                  ? 'translateY(0)'
+                  : '',
+              opacity:
+                benchmarkScore && averageScore && benchmarkScore > averageScore
+                  ? '1'
+                  : '0',
+            }"
+            class="dynamic-rating__average-arrows-arrow dynamic-rating__average-arrows-arrow-down"
+            src="./assets/arrows-down.svg"
+          />
+          <img
+            :style="{
+              transform:
+                benchmarkScore && averageScore && benchmarkScore <= averageScore
+                  ? 'translateY(0)'
+                  : '',
+              opacity:
+                benchmarkScore && averageScore && benchmarkScore <= averageScore
+                  ? '1'
+                  : '0',
+            }"
+            class="dynamic-rating__average-arrows-arrow dynamic-rating__average-arrows-arrow-up"
+            src="./assets/arrows-up.svg"
+          />
+        </div>
         <div class="dynamic-rating__average-score-container">
           <div class="dynamic-rating__average-counter">
             <div class="dynamic-rating__average-counter-wrapper">
