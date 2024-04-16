@@ -1,6 +1,6 @@
 <template>
   <dynamic-rating
-    :averageScore="5"
+    :averageScore="5.5"
     :benchmarkScore="4"
   ></dynamic-rating>
 </template>

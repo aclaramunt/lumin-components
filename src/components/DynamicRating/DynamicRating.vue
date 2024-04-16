@@ -1,5 +1,8 @@
 <template>
-  <div :class="`dynamic-rating dynamic-rating--${variant}`">
+  <div
+    ref="graph"
+    :class="`dynamic-rating ${variant ? `dynamic-rating--${variant}` : ''}`"
+  >
     <section class="dynamic-rating__info">
       <h3 class="dynamic-rating__average-title">Average Score</h3>
       <section class="dynamic-rating__average-score">
@@ -44,6 +47,9 @@
               >
                 {{ number }}
               </span>
+              <span class="dynamic-rating__average-counter-number">{{
+                averageScore
+              }}</span>
             </div>
           </div>
           <div class="dynamic-rating__average-total">/{{ maxValue }}</div>
@@ -62,61 +68,94 @@
               >
                 {{ number }}
               </span>
+              <span class="dynamic-rating__benchmark-counter-number">{{
+                benchmarkScore
+              }}</span>
             </div>
           </div>
           <div class="dynamic-rating__benchmark-total">/{{ maxValue }}</div>
         </div>
       </div>
     </section>
-    <svg
-      class="dynamic-rating__average-rating"
-      viewBox="-1 -1 34 34"
+    <div class="dynamic-rating__graphs">
+      <svg
+        class="dynamic-rating__average-rating"
+        viewBox="-1 -1 34 34"
+      >
+        <circle
+          cx="16"
+          cy="16"
+          r="16"
+          class="dynamic-rating__average-rating-background"
+        />
+        <circle
+          cx="16"
+          cy="16"
+          r="16"
+          class="dynamic-rating__average-rating-progress"
+          :style="{
+            stroke: averageColor ?? '',
+            strokeDashoffset: averageProgress
+              ? 100 - averageProgress * maxValue
+              : 100,
+          }"
+        />
+      </svg>
+      <div class="dynamic-rating__benchmark-rating-parent">
+        <svg
+          class="dynamic-rating__benchmark-rating"
+          viewBox="-1 -1 34 34"
+          style=""
+        >
+          <circle
+            cx="16"
+            cy="16"
+            r="16"
+            class="dynamic-rating__benchmark-rating-background"
+          />
+          <circle
+            cx="16"
+            cy="16"
+            r="16"
+            class="dynamic-rating__benchmark-rating-progress"
+            :style="{
+              stroke: benchmarkColor ?? '',
+              strokeDashoffset: benchmarkScore
+                ? 100 - benchmarkScore * maxValue
+                : 100,
+            }"
+          />
+        </svg>
+      </div>
+    </div>
+    <button
+      class="dynamic-rating__download-button"
+      @click="downloadGraph"
     >
-      <circle
-        cx="16"
-        cy="16"
-        r="16"
-        class="dynamic-rating__average-rating-background"
-      />
-      <circle
-        cx="16"
-        cy="16"
-        r="16"
-        class="dynamic-rating__average-rating-progress"
-        :style="{
-          stroke: averageColor ?? '',
-          strokeDashoffset: averageScore ? 100 - averageScore * maxValue : 100,
-        }"
-      />
-    </svg>
-    <svg
-      class="dynamic-rating__benchmark-rating"
-      viewBox="-1 -1 34 34"
-    >
-      <circle
-        cx="16"
-        cy="16"
-        r="16"
-        class="dynamic-rating__benchmark-rating-background"
-      />
-      <circle
-        cx="16"
-        cy="16"
-        r="16"
-        class="dynamic-rating__benchmark-rating-progress"
-        :style="{
-          stroke: benchmarkColor ?? '',
-          strokeDashoffset: benchmarkScore
-            ? 100 - benchmarkScore * maxValue
-            : 100,
-        }"
-      />
-    </svg>
+      <svg
+        class="w-6 h-6 text-gray-800 dark:text-white"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5-4 5-4-5m9 8h.01"
+        />
+      </svg>
+    </button>
   </div>
 </template>
 
 <script>
 import { computed, watch, ref } from "vue"
+import html2canvas from "html2canvas"
 
 export default {
   name: "DynamicRating",
@@ -143,15 +182,17 @@ export default {
   },
   setup(props) {
     const scoreToFixed = (score, numberOfDecimals = 0) => {
-      const scoreRounded = Number.isInteger(score)
-        ? score
-        : score.toFixed(numberOfDecimals)
+      let scoreRounded = score.toFixed(numberOfDecimals)
+      console.log({ scoreRounded, score }, scoreRounded % 1)
+      if (scoreRounded % 1 == 0) {
+        scoreRounded = parseInt(scoreRounded)
+      }
       return scoreRounded <= 10 ? scoreRounded : 10
     }
 
     const counter = (num) => {
       const arr = []
-      for (let i = 1; i <= num; i++) {
+      for (let i = 1; i < num; i++) {
         arr.push(i)
       }
       return arr
@@ -159,10 +200,13 @@ export default {
 
     const averageScore = ref(0)
     const benchmarkScore = ref(0)
+    const averageProgress = ref(0)
     const averageCounter = computed(() => counter(averageScore.value))
     const benchmarkCounter = computed(() => counter(benchmarkScore.value))
+
     setTimeout(() => {
-      averageScore.value = scoreToFixed(props.averageScore)
+      averageScore.value = scoreToFixed(props.averageScore, 1)
+      averageProgress.value = props.averageScore
       benchmarkScore.value = scoreToFixed(props.benchmarkScore)
     }, 500)
 
@@ -170,7 +214,8 @@ export default {
     watch(
       () => props.averageScore,
       (newValue) => {
-        averageScore.value = scoreToFixed(newValue)
+        averageScore.value = scoreToFixed(newValue, 1)
+        averageProgress.value = scoreToFixed(newValue, 1)
       }
     )
     watch(
@@ -182,21 +227,41 @@ export default {
 
     return {
       averageScore,
+      averageProgress,
       averageCounter,
       benchmarkScore,
       benchmarkCounter,
       maxValue: 10,
     }
   },
-  // mounted(props) {
-  //   const scoreToFixed = (score, numberOfDecimals = 0) => {
-  //     const scoreRounded = Number.isInteger(score)
-  //       ? score
-  //       : score.toFixed(numberOfDecimals)
-  //     return scoreRounded <= 10 ? scoreRounded : 10
-  //   }
-  //   this.$set(this, "averageScore", 6)
-  // },
+  methods: {
+    downloadGraph() {
+      // Delete hidden number to create image correctly
+      const averageNumbers = document.querySelectorAll(
+        ".dynamic-rating__average-counter-number"
+      )
+      for (let i = 0; i < averageNumbers.length - 1; i++) {
+        averageNumbers[i].parentNode.removeChild(averageNumbers[i])
+      }
+      const benchmarkNumbers = document.querySelectorAll(
+        ".dynamic-rating__benchmark-counter-number"
+      )
+      for (let i = 0; i < benchmarkNumbers.length - 1; i++) {
+        benchmarkNumbers[i].parentNode.removeChild(benchmarkNumbers[i])
+      }
+
+      html2canvas(this.$refs.graph).then((canvas) => {
+        console.log({ canvas })
+        const url = canvas.toDataURL()
+        const a = document.createElement("a")
+        a.href = url
+        a.download = "graph.png"
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+      })
+    },
+  },
 }
 </script>
 

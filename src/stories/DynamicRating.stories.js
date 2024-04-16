@@ -32,7 +32,7 @@ export default {
 
 export const Green = {
   args: {
-    averageScore: 8,
+    averageScore: 8.5,
     benchmarkScore: 6,
     variant: 'green'
   },
@@ -46,7 +46,7 @@ export const Blue = {
 };
 export const Lilac = {
   args: {
-    averageScore: 5,
+    averageScore: 5.1,
     benchmarkScore: 6,
     variant: 'lilac'
   },

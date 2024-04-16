@@ -35,6 +35,28 @@
   justify-content: center;
 }
   /*
+  BUTTON DOWNLOAD
+  */
+  .dynamic-rating__download-button {
+    border: 0 none transparent;
+    background-color: transparent;
+    box-shadow: none;
+    opacity: 0;
+    position: absolute;
+    right: -10px;
+    top: 0;
+    transition: opacity .2s ease-in;
+    z-index: 1000;
+    cursor: pointer;
+  }
+    .dynamic-rating__download-button:hover {
+      transform: translateY(1px);
+    }
+    .dynamic-rating:hover .dynamic-rating__download-button {
+      opacity: 1;
+    }
+
+  /*
   DARK MODE
   */
   .dark-theme {
@@ -63,15 +85,26 @@
   }
 
   /*
+  GRAPHS
+  */
+  .dynamic-rating__graphs {
+    transform: rotate(-90deg);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+  }
+
+  /*
   AVERAGE GRAPH
   */
   .dynamic-rating__average-rating {
     position: absolute;
     height: 100%;
     width: 100%;
-    top: 50%;
-    right: 50%;
-    transform: rotate(-90deg) translate(50%, 50%);
+    top: 0;
+    right: 0;
     z-index: 1;
   }
     .dynamic-rating__average-rating-background {
@@ -160,14 +193,17 @@
   /*
   BENCHMARK GRAPH
   */
-  .dynamic-rating__benchmark-rating {
+  .dynamic-rating__benchmark-rating-parent {
+    top: 0;
+    bottom: 0;
     position: absolute;
-    height: var(--benchmark-size);
-    width: var(--benchmark-size);
-    top: 50%;
-    right: 50%;
-    transform: rotate(-90deg) translate(50%, 50%);
+    margin: 20px;
     z-index: 1;
+    left: 0;
+    right: 0;
+  }
+  .dynamic-rating__benchmark-rating {
+    position: relative;
   }
     .dynamic-rating__benchmark-rating-background {
       fill: none;
