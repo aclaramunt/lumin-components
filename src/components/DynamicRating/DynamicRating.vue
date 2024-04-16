@@ -236,26 +236,30 @@ export default {
   },
   methods: {
     downloadGraph() {
-      // Delete hidden number to create image correctly
+      // Delete hidden numbers to create image correctly
       const averageNumbers = document.querySelectorAll(
         ".dynamic-rating__average-counter-number"
       )
-      for (let i = 0; i < averageNumbers.length - 1; i++) {
-        averageNumbers[i].parentNode.removeChild(averageNumbers[i])
-      }
       const benchmarkNumbers = document.querySelectorAll(
         ".dynamic-rating__benchmark-counter-number"
       )
-      for (let i = 0; i < benchmarkNumbers.length - 1; i++) {
-        benchmarkNumbers[i].parentNode.removeChild(benchmarkNumbers[i])
-      }
+      Array.from(averageNumbers)?.map((number, index) => {
+        if (index + 1 < averageNumbers.length) {
+          number.remove()
+        }
+      })
+      Array.from(benchmarkNumbers)?.map((number, index) => {
+        if (index + 1 < benchmarkNumbers.length) {
+          number.remove()
+        }
+      })
 
       html2canvas(this.$refs.graph).then((canvas) => {
         console.log({ canvas })
         const url = canvas.toDataURL()
         const a = document.createElement("a")
         a.href = url
-        a.download = "graph.png"
+        a.download = `rating-average-${this.averageScore}-benchmark-${this.benchmarkScore}.png`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
