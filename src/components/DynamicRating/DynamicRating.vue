@@ -154,11 +154,11 @@
 </template>
 
 <script>
-import { computed, watch, ref } from "vue"
-import html2canvas from "html2canvas"
+import { computed, watch, ref } from 'vue'
+import html2canvas from 'html2canvas'
 
 export default {
-  name: "DynamicRating",
+  name: 'DynamicRating',
   props: {
     averageScore: {
       default: 0,
@@ -170,7 +170,7 @@ export default {
       variant: Number,
       required: true,
     },
-    variant: "green" | "blue" | "lilac" | "pink" | "yellow",
+    variant: 'green' | 'blue' | 'lilac' | 'pink' | 'yellow',
     averageColor: {
       default: undefined,
       variant: String,
@@ -207,7 +207,7 @@ export default {
     setTimeout(() => {
       averageScore.value = scoreToFixed(props.averageScore, 1)
       averageProgress.value = props.averageScore
-      benchmarkScore.value = scoreToFixed(props.benchmarkScore)
+      benchmarkScore.value = scoreToFixed(props.benchmarkScore, 1)
     }, 500)
 
     // Watchers
@@ -221,7 +221,7 @@ export default {
     watch(
       () => props.benchmarkScore,
       (newValue) => {
-        benchmarkScore.value = scoreToFixed(newValue)
+        benchmarkScore.value = scoreToFixed(newValue, 1)
       }
     )
 
@@ -238,10 +238,10 @@ export default {
     downloadGraph() {
       // Delete hidden numbers to create image correctly
       const averageNumbers = document.querySelectorAll(
-        ".dynamic-rating__average-counter-number"
+        '.dynamic-rating__average-counter-number'
       )
       const benchmarkNumbers = document.querySelectorAll(
-        ".dynamic-rating__benchmark-counter-number"
+        '.dynamic-rating__benchmark-counter-number'
       )
       Array.from(averageNumbers)?.map((number, index) => {
         if (index + 1 < averageNumbers.length) {
@@ -257,7 +257,7 @@ export default {
       html2canvas(this.$refs.graph).then((canvas) => {
         console.log({ canvas })
         const url = canvas.toDataURL()
-        const a = document.createElement("a")
+        const a = document.createElement('a')
         a.href = url
         a.download = `rating-average-${this.averageScore}-benchmark-${this.benchmarkScore}.png`
         document.body.appendChild(a)
